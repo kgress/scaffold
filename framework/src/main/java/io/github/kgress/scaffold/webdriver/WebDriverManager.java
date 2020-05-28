@@ -475,8 +475,6 @@ public class WebDriverManager {
      * If any issue is discovered during the starting of this browser, we will throw a {@link WebDriverException} with a
      * custom message.
      * <p>
-     * TODO Let's switch this to W3 standard: https://saucelabs.com/products/open-source-frameworks/selenium/w3c-webdriver-protocol
-     * <p>
      * TODO We also need to update report test pass/fail to sauce so it shows up as pass/fail on the sauce UI
      *
      * @param browserOptions the desired capabilities we're adding on to
@@ -489,7 +487,7 @@ public class WebDriverManager {
         // In order to build the URi correctly, pull the username and access key from the desired capabilities bean.
         var username = sauce.getUserName();
         var accessKey = sauce.getAccessKey();
-        var sauceUrl = "@ondemand.saucelabs.com/wd/hub";
+        var sauceUrl = "ondemand.saucelabs.com/wd/hub";
         var tunnelIdentifier = sauce.getTunnelIdentifier();
         var parentTunnel = sauce.getParentTunnel();
 
@@ -500,10 +498,17 @@ public class WebDriverManager {
             if (sauce.getParentTunnel() != null) {
                 browserOptions.setCapability("parentTunnel", parentTunnel);
             }
-            browserOptions.setCapability("name", testName);
             if (remoteUrl == null) {
-                remoteUrl = URI.create("http://" + username + ":" + accessKey + sauceUrl).toString();
+                remoteUrl = URI.create("https://" + sauceUrl).toString();
             }
+
+            MutableCapabilities sauceCaps = new MutableCapabilities();
+            sauceCaps.setCapability("username", username);
+            sauceCaps.setCapability("accessKey", accessKey);
+            sauceCaps.setCapability("name", testName);
+            sauceCaps.setCapability("screenResolution", screenResolution.getScreenShotResolutionAsString(SAUCELABS));
+            browserOptions.setCapability("sauce:options", sauceCaps);
+
             return startScreenshotRemoteDriver(remoteUrl, browserOptions);
         } catch (Exception e) {
             throw new WebDriverContextException("Unable to start new remote session against saucelabs. Please check your " +
