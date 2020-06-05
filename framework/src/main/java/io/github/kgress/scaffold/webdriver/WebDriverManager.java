@@ -354,6 +354,7 @@ public class WebDriverManager {
     private WebDriver configureRemoteBrowser(MutableCapabilities browserOptions, String testName) {
         var browserVersion = desiredCapabilities.getBrowserVersion();
         var runPlatform = desiredCapabilities.getRunPlatform();
+		var browserType = desiredCapabilities.getBrowserType();
         RemoteWebDriver remoteWebDriver;
 
         if (runType == SAUCE) {
@@ -362,6 +363,11 @@ public class WebDriverManager {
                 browserOptions.setCapability("browserVersion", browserVersion);
             }
 
+			// If the browser type isn't null, set the type capability to what the user wants
+			if (browserType != null) {
+				browserOptions.setCapability("browserName", browserType);
+			}
+			
             // If the run platform value isn't null, set the platform to what the user wants
             if (runPlatform != null) {
                 browserOptions.setCapability("platformName", runPlatform);
