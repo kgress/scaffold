@@ -544,7 +544,6 @@ public class WebDriverManager {
     }
     // Create the remote web driver and set the session id, adding it to the test context
     remoteWebDriver = createRemoteWebDriver(browserOptions, testName);
-    //    private Set<Cookie> cookieJar = new TreeSet<>();
     String sessionId = remoteWebDriver.getSessionId().toString();
     TestContext.baseContext().addSetting("SESSION_ID", sessionId);
 
