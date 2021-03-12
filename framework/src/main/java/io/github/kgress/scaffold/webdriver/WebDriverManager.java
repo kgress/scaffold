@@ -445,14 +445,9 @@ public class WebDriverManager {
    */
   private WebDriver configureRemoteDriver(MutableCapabilities browserOptions) {
     RemoteWebDriver remoteWebDriver;
-
-    // Create the remote web driver and set the session id, adding it to the test context
     remoteWebDriver = createRemoteWebDriver(browserOptions);
     String sessionId = remoteWebDriver.getSessionId().toString();
     TestContext.baseContext().addSetting("SESSION_ID", sessionId);
-
-    // Check if the run type is GRID. If it is, send the test info through to grid
-//    checkIfGridAndSendGridRequest(remoteWebDriver);
     return remoteWebDriver;
   }
 
